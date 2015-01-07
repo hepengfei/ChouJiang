@@ -1,26 +1,31 @@
 package io.github.hepengfei.choujiang;
 
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private static final long DELAY_MILLIS = 30;
+
     private Button button;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        textView = (TextView) findViewById(R.id.textView);
         button = (Button) findViewById(R.id.button);
         initForStart();
     }
@@ -48,10 +53,35 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message message) {
+
+            if (message.what == 1) {
+                Random random = new Random();
+                random.setSeed(System.currentTimeMillis());
+                int rand = Math.abs(random.nextInt());
+
+                textView.setText("#" + rand);
+
+                if (! isStop()) {
+                    handler.sendEmptyMessageDelayed(1, DELAY_MILLIS);
+                }
+            }
+        }
+    };
+
+    private boolean isStop() {
+        final String buttonText = button.getText().toString();
+        return buttonText.equals(getResources().getString(R.string.button_start));
+    }
+
     private View.OnClickListener startListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             initForStop();
+
+            handler.sendEmptyMessage(1);
         }
     };
 
