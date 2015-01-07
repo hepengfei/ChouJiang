@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Random;
-
 
 public class MainActivity extends ActionBarActivity {
 
@@ -58,11 +56,8 @@ public class MainActivity extends ActionBarActivity {
         public void handleMessage(Message message) {
 
             if (message.what == 1) {
-                Random random = new Random();
-                random.setSeed(System.currentTimeMillis());
-                int rand = Math.abs(random.nextInt());
-
-                textView.setText("#" + rand);
+                String name = getNameRandom();
+                textView.setText(name);
 
                 if (! isStop()) {
                     handler.sendEmptyMessageDelayed(1, DELAY_MILLIS);
@@ -70,6 +65,10 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     };
+
+    private String getNameRandom() {
+        return PersonManager.getInstance().getPersonName();
+    }
 
     private boolean isStop() {
         final String buttonText = button.getText().toString();
