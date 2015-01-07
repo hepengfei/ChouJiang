@@ -21,6 +21,7 @@ public class MainActivity extends ActionBarActivity {
     private Button button;
     private TextView chosenPersonView;
     private Button verify;
+    private TextView hint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +31,25 @@ public class MainActivity extends ActionBarActivity {
         chosenPersonView = (TextView) findViewById(R.id.textView);
         button = (Button) findViewById(R.id.button);
         verify = (Button) findViewById(R.id.verify);
+        hint = (TextView) findViewById(R.id.hint);
 
         verify.setOnClickListener(verifyListener);
         verify.setEnabled(false);
         chosenPersonView.setText("");
+        updateHint();
 
         initForStart();
+    }
+
+    private void updateHint() {
+        String message = "总共" +
+                personManager.getTotalPersonCount() +
+                "人，已抽奖" +
+                (personManager.getTotalPersonCount() - personManager.getLeftPersonCount()) +
+                "人，剩余" +
+                personManager.getLeftPersonCount() +
+                "人。";
+        hint.setText(message);
     }
 
 
@@ -116,6 +130,7 @@ public class MainActivity extends ActionBarActivity {
             }
             chosenPersonView.setText("");
             showMessage("恭喜 " + personName + " 中奖！");
+            updateHint();
         }
     };
 

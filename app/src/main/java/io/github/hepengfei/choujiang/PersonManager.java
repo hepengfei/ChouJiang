@@ -74,4 +74,12 @@ public class PersonManager {
         length = length + 1;
     }
 
+    public int getLeftPersonCount() {
+        return length;
+    }
+
+    public int getTotalPersonCount() {
+        return personList.length;
+    }
+
 }
