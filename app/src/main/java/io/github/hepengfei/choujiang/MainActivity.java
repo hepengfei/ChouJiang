@@ -23,6 +23,8 @@ public class MainActivity extends ActionBarActivity {
     private Button verify;
     private TextView hint;
 
+    private String verifiedPersonName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,12 +44,17 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void updateHint() {
+        int delta = 0;
+        if ((verifiedPersonName == null) && (chosenPersonView.getText().length() != 0)) {
+            delta = 1;
+        }
+
         String message = "总共" +
                 personManager.getTotalPersonCount() +
                 "人，已抽奖" +
-                (personManager.getTotalPersonCount() - personManager.getLeftPersonCount()) +
+                (personManager.getTotalPersonCount() - personManager.getLeftPersonCount() - delta) +
                 "人，剩余" +
-                personManager.getLeftPersonCount() +
+                (personManager.getLeftPersonCount() + delta) +
                 "人。";
         hint.setText(message);
     }
@@ -79,6 +86,8 @@ public class MainActivity extends ActionBarActivity {
     private void reset() {
         chosenPersonView.setText("");
         personManager.reset();
+        verify.setEnabled(false);
+        verify.setText("确认领奖");
         updateHint();
     }
 
@@ -90,6 +99,8 @@ public class MainActivity extends ActionBarActivity {
                 recoverPersonIfNotVerify();
                 String name = personManager.choosePerson();
                 chosenPersonView.setText(name);
+
+                verify.setText("确认" + name + "领奖");
 
                 if (! isStop()) {
                     handler.sendEmptyMessageDelayed(1, DELAY_MILLIS);
@@ -117,6 +128,7 @@ public class MainActivity extends ActionBarActivity {
         public void onClick(View v) {
             initForStop();
 
+            verifiedPersonName = null;
             handler.sendEmptyMessage(1);
         }
     };
@@ -131,12 +143,25 @@ public class MainActivity extends ActionBarActivity {
     private View.OnClickListener verifyListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String personName = chosenPersonView.getText().toString();
-            if (personName.isEmpty()) {
-                return;
+            if (verifiedPersonName == null) {
+                String personName = chosenPersonView.getText().toString();
+                if (personName.isEmpty()) {
+                    return;
+                }
+                chosenPersonView.setText("");
+                verifiedPersonName = personName;
+                verify.setText("取消" + personName + "领奖");
+
+                showMessage("恭喜 " + personName + " 中奖！");
+
+            } else { // 取消确认
+                String personName = verifiedPersonName;
+                chosenPersonView.setText(verifiedPersonName);
+                verifiedPersonName = null;
+                verify.setText("确认" + personName + "领奖");
+
+                showMessage("已取消 " + personName + " 领奖！");
             }
-            chosenPersonView.setText("");
-            showMessage("恭喜 " + personName + " 中奖！");
             updateHint();
         }
     };
@@ -157,5 +182,6 @@ public class MainActivity extends ActionBarActivity {
         button.setOnClickListener(stopListener);
 
         verify.setEnabled(false);
+        verify.setText("确认领奖");
     }
 }
