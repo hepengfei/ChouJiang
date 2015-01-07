@@ -82,4 +82,7 @@ public class PersonManager {
         return personList.length;
     }
 
+    public void reset() {
+        length = personList.length;
+    }
 }

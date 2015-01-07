@@ -68,11 +68,18 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_reset) {
+            reset();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void reset() {
+        chosenPersonView.setText("");
+        personManager.reset();
+        updateHint();
     }
 
     private Handler handler = new Handler() {
