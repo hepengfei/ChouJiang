@@ -31,26 +31,47 @@ public class PersonManager {
     }
 
     private String personList [];
+    private int length;
     private Random random;
 
     private PersonManager() {
         personList = new String[initialPersonList.length];
         System.arraycopy(initialPersonList, 0, personList, 0, initialPersonList.length);
+        length = personList.length;
 
         random = new Random();
     }
 
-    public int getPersonIndex() {
-        random.setSeed(System.currentTimeMillis());
-        int rand = Math.abs(random.nextInt());
+    // random choose a person and remove it
+    public String choosePerson() {
+        if (length == 0) {
+            return "";
+        }
 
-        return rand % personList.length;
+        Randomizer.randomize(random, personList, 0, length);
+
+        random.setSeed(System.currentTimeMillis());
+        int randomIndex = Math.abs(random.nextInt()) % length;
+
+        length = length - 1;
+
+        String chosen = personList[randomIndex];
+        personList[randomIndex] = personList[length];
+        personList[length] = chosen;
+
+        return chosen;
     }
 
-    public String getPerson(int index) {
-        Randomizer.randomize(random, personList, 0, personList.length);
+    public void recoverPerson(String name) {
+        if (length + 1 > personList.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
 
-        return personList[index];
+        if (! personList[length].equals(name)) {
+            throw new RuntimeException("Only last chosen person can be recovered");
+        }
+
+        length = length + 1;
     }
 
 }

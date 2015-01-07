@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -18,16 +19,22 @@ public class MainActivity extends ActionBarActivity {
     private PersonManager personManager = PersonManager.getInstance();
 
     private Button button;
-    private TextView textView;
-    private int lastPersonIndex;
+    private TextView chosenPersonView;
+    private Button verify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView) findViewById(R.id.textView);
+        chosenPersonView = (TextView) findViewById(R.id.textView);
         button = (Button) findViewById(R.id.button);
+        verify = (Button) findViewById(R.id.verify);
+
+        verify.setOnClickListener(verifyListener);
+        verify.setEnabled(false);
+        chosenPersonView.setText("");
+
         initForStart();
     }
 
@@ -59,8 +66,9 @@ public class MainActivity extends ActionBarActivity {
         public void handleMessage(Message message) {
 
             if (message.what == 1) {
-                String name = getPersonName();
-                textView.setText(name);
+                recoverPersonIfNotVerify();
+                String name = personManager.choosePerson();
+                chosenPersonView.setText(name);
 
                 if (! isStop()) {
                     handler.sendEmptyMessageDelayed(1, DELAY_MILLIS);
@@ -69,9 +77,13 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    private String getPersonName() {
-        lastPersonIndex = personManager.getPersonIndex();
-        return personManager.getPerson(lastPersonIndex);
+    private void recoverPersonIfNotVerify() {
+        String personName = chosenPersonView.getText().toString();
+        if (personName.isEmpty()) {
+            return;
+        }
+        personManager.recoverPerson(personName);
+
     }
 
     private boolean isStop() {
@@ -95,13 +107,33 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
+    private View.OnClickListener verifyListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String personName = chosenPersonView.getText().toString();
+            if (personName.isEmpty()) {
+                return;
+            }
+            chosenPersonView.setText("");
+            showMessage("恭喜 " + personName + " 中奖！");
+        }
+    };
+
+    private void showMessage(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
     private void initForStart() {
         button.setText(R.string.button_start);
         button.setOnClickListener(startListener);
+
+        verify.setEnabled(true);
     }
 
     private void initForStop() {
         button.setText(R.string.button_stop);
         button.setOnClickListener(stopListener);
+
+        verify.setEnabled(false);
     }
 }
