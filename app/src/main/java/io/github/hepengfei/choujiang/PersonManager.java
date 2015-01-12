@@ -3,8 +3,7 @@ package io.github.hepengfei.choujiang;
 import java.util.Random;
 
 public class PersonManager {
-    private static PersonManager ourInstance = new PersonManager();
-    private static String personList [] = new String[] {
+    private static String initialPersonList [] = new String[] {
         "昌睿",
         "泉龙",
         "建利",
@@ -30,65 +29,39 @@ public class PersonManager {
         return ourInstance;
     }
 
-    private String personList [];
-    private int length;
-    private Random random;
+    ChouJiangInterface chou;
 
     private PersonManager() {
-        personList = new String[initialPersonList.length];
-        System.arraycopy(initialPersonList, 0, personList, 0, initialPersonList.length);
-        length = personList.length;
-
-        random = new Random();
+        chou = new ChouJiangRandom();
+        chou.init(initialPersonList);
     }
 
     // random choose a person and remove it
     public String choosePerson() {
-        if (length == 0) {
-            return "";
-        }
+        chou.next();
+        chou.gotIt();
 
-        Randomizer.randomize(random, personList, 0, length);
-
-        random.setSeed(System.currentTimeMillis());
-        int randomIndex = Math.abs(random.nextInt()) % length;
-
-        length = length - 1;
-
-        String chosen = personList[randomIndex];
-        personList[randomIndex] = personList[length];
-        personList[length] = chosen;
-
-        return chosen;
+        return chou.chosen();
     }
 
     public String showRandomPerson() {
-        random.setSeed(System.currentTimeMillis());
-        int randomIndex = Math.abs(random.nextInt()) % personList.length;
-        return personList[randomIndex];
+        return chou.chosenForDisplay();
     }
 
     public void recoverPerson(String name) {
-        if (length + 1 > personList.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-
-        if (! personList[length].equals(name)) {
-            throw new RuntimeException("Only last chosen person can be recovered");
-        }
-
-        length = length + 1;
+        chou.giveUp();
     }
 
     public int getLeftPersonCount() {
-        return length;
+        return chou.countLeft();
     }
 
     public int getTotalPersonCount() {
-        return personList.length;
+        return chou.countTotal();
     }
 
     public void reset() {
-        length = personList.length;
+        chou = new ChouJiangRandom();
+        chou.init(initialPersonList);
     }
 }
