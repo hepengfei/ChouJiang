@@ -24,18 +24,33 @@ public class PersonManager {
         "思源"
     };
 
+    private static PersonManager ourInstance = new PersonManager();
+
     public static PersonManager getInstance() {
         return ourInstance;
     }
 
+    private String personList [];
+    private Random random;
+
     private PersonManager() {
+        personList = new String[initialPersonList.length];
+        System.arraycopy(initialPersonList, 0, personList, 0, initialPersonList.length);
+
+        random = new Random();
     }
 
-    public String getPersonName() {
-        Random random = new Random();
+    public int getPersonIndex() {
         random.setSeed(System.currentTimeMillis());
         int rand = Math.abs(random.nextInt());
 
-        return personList[rand % personList.length];
+        return rand % personList.length;
     }
+
+    public String getPerson(int index) {
+        Randomizer.randomize(random, personList, 0, personList.length);
+
+        return personList[index];
+    }
+
 }

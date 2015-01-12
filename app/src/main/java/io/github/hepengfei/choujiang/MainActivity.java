@@ -15,8 +15,11 @@ public class MainActivity extends ActionBarActivity {
 
     private static final long DELAY_MILLIS = 30;
 
+    private PersonManager personManager = PersonManager.getInstance();
+
     private Button button;
     private TextView textView;
+    private int lastPersonIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
         public void handleMessage(Message message) {
 
             if (message.what == 1) {
-                String name = getNameRandom();
+                String name = getPersonName();
                 textView.setText(name);
 
                 if (! isStop()) {
@@ -66,8 +69,9 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    private String getNameRandom() {
-        return PersonManager.getInstance().getPersonName();
+    private String getPersonName() {
+        lastPersonIndex = personManager.getPersonIndex();
+        return personManager.getPerson(lastPersonIndex);
     }
 
     private boolean isStop() {
