@@ -24,6 +24,7 @@ public class MainActivity extends ActionBarActivity {
     private TextView hint;
 
     private String verifiedPersonName;
+    private TextView showPersonView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         chosenPersonView = (TextView) findViewById(R.id.textView);
+        showPersonView = (TextView) findViewById(R.id.showView);
         button = (Button) findViewById(R.id.button);
         verify = (Button) findViewById(R.id.verify);
         hint = (TextView) findViewById(R.id.hint);
@@ -38,6 +40,8 @@ public class MainActivity extends ActionBarActivity {
         verify.setOnClickListener(verifyListener);
         verify.setEnabled(false);
         chosenPersonView.setText("");
+        chosenPersonView.setVisibility(View.INVISIBLE);
+        showPersonView.setText("");
         updateHint();
 
         initForStart();
@@ -85,6 +89,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void reset() {
         chosenPersonView.setText("");
+        showPersonView.setText("");
         personManager.reset();
         verify.setEnabled(false);
         verify.setText("确认领奖");
@@ -96,15 +101,17 @@ public class MainActivity extends ActionBarActivity {
         public void handleMessage(Message message) {
 
             if (message.what == 1) {
+                if (isStop()) {
+                    return;
+                }
+
                 recoverPersonIfNotVerify();
                 String name = personManager.choosePerson();
                 chosenPersonView.setText(name);
 
-                verify.setText("确认" + name + "领奖");
+                showPersonView.setText(personManager.showRandomPerson());
 
-                if (! isStop()) {
-                    handler.sendEmptyMessageDelayed(1, DELAY_MILLIS);
-                }
+                handler.sendEmptyMessageDelayed(1, DELAY_MILLIS);
             }
         }
     };
@@ -115,7 +122,6 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
         personManager.recoverPerson(personName);
-
     }
 
     private boolean isStop() {
@@ -136,6 +142,10 @@ public class MainActivity extends ActionBarActivity {
     private View.OnClickListener stopListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            String name = chosenPersonView.getText().toString();
+            showPersonView.setText(name);
+            verify.setText("确认" + name + "领奖");
+
             initForStart();
         }
     };

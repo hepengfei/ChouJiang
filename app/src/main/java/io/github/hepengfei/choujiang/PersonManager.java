@@ -62,6 +62,12 @@ public class PersonManager {
         return chosen;
     }
 
+    public String showRandomPerson() {
+        random.setSeed(System.currentTimeMillis());
+        int randomIndex = Math.abs(random.nextInt()) % personList.length;
+        return personList[randomIndex];
+    }
+
     public void recoverPerson(String name) {
         if (length + 1 > personList.length) {
             throw new ArrayIndexOutOfBoundsException();
