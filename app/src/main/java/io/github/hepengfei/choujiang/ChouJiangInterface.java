@@ -21,7 +21,7 @@ public interface ChouJiangInterface {
     // 供显示用的
     public String chosenForDisplay();
 
-    // 当前抽中的
+    // 当前抽中的，未开始抽奖返回null
     public String chosen();
 
     // 领奖

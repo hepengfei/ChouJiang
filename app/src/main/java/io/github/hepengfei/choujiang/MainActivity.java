@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -58,7 +57,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initChouJiang() {
-        chou = new ChouJiangRandom();
+        chou = new ChouJiangRandomRound();
         chou.init(initialPersonList);
     }
 
@@ -74,8 +73,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void updateHint() {
-        String message = "总共" + chou.countTotal() + "人，已抽奖" + chou.countGot() +
-                "人，剩余" + chou.countLeft() + "人。";
+        String message = "总共" + chou.countTotal() + "人，已开奖" + chou.countGot() +
+                "次，本轮剩余" + chou.countLeft() + "人";
         hint.setText(message);
     }
 
@@ -94,17 +93,8 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_reset) {
-            reset();
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void reset() {
-        initChouJiang();
-        initView();
     }
 
     private Handler handler = new Handler() {

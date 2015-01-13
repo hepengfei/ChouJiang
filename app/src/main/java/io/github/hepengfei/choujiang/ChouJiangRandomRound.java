@@ -5,13 +5,14 @@ import java.util.Random;
 /**
  * Created by hpf on 15/1/12.
  */
-public class ChouJiangRandom implements ChouJiangInterface {
+public class ChouJiangRandomRound implements ChouJiangInterface {
     private String list[];
     private int count;
     private Random random;
 
     private int currentChoosen;
     private boolean gotIt;
+    private int numberOfRound;
 
     @Override
     public void init(String[] list) {
@@ -24,6 +25,7 @@ public class ChouJiangRandom implements ChouJiangInterface {
 
         currentChoosen = -1;
         gotIt = false;
+        numberOfRound = 0;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class ChouJiangRandom implements ChouJiangInterface {
 
     @Override
     public int countGot() {
-        return countTotal() - countLeft();
+        return ((numberOfRound + 1) * countTotal()) - countLeft();
     }
 
     @Override
@@ -55,7 +57,8 @@ public class ChouJiangRandom implements ChouJiangInterface {
         }
 
         if (count == 0) {
-            return;
+            count = list.length;
+            numberOfRound++;
         }
 
         randomize(random, list, 0, count);
@@ -66,16 +69,13 @@ public class ChouJiangRandom implements ChouJiangInterface {
 
     @Override
     public String chosenForDisplay() {
-        if (count == 0) {
-            return "";
-        }
         return list[Math.abs(random.nextInt()) % list.length];
     }
 
     @Override
     public String chosen() {
         if (currentChoosen == -1) {
-            return "";
+            return null;
         }
         return list[currentChoosen];
     }
