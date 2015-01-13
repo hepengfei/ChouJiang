@@ -15,6 +15,25 @@ import android.widget.Toast;
 public class MainActivity extends ActionBarActivity {
 
     private static final long DELAY_MILLIS = 30;
+    private static String initialPersonList [] = new String[] {
+            "昌睿",
+            "周泉龙",
+            "李建利",
+            "泰福",
+            "王长财",
+            "红良",
+            "张昌逊",
+            "卓臻",
+            "昌哲",
+            "贺承哲",
+            "卓逊",
+            "武臻",
+            "肖武睿",
+            "昌羲",
+            "昌臻",
+            "彦睿",
+            "思源"
+    };
 
     private ChouJiangInterface chou;
 
@@ -35,7 +54,7 @@ public class MainActivity extends ActionBarActivity {
         hint = (TextView) findViewById(R.id.hint);
 
         chou = new ChouJiangRandom();
-        chou.init(PersonManager.initialPersonList);
+        chou.init(initialPersonList);
 
         verify.setOnClickListener(verifyListener);
         verify.setEnabled(false);
@@ -83,7 +102,7 @@ public class MainActivity extends ActionBarActivity {
     private void reset() {
         showPersonView.setText("");
         chou = new ChouJiangRandom();
-        chou.init(PersonManager.initialPersonList);
+        chou.init(initialPersonList);
 
         verify.setEnabled(false);
         verify.setText("确认领奖");
