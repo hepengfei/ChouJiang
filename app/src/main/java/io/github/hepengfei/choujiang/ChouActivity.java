@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-public class MainActivity extends ActionBarActivity {
+public class ChouActivity extends ActionBarActivity {
 
     private static final long DELAY_MILLIS = 30;
     private static String initialPersonList [] = new String[] {
