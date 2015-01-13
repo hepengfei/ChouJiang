@@ -14,6 +14,10 @@ public class PoolManagerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pool_manager);
 
+        initActionBar();
+    }
+
+    private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }

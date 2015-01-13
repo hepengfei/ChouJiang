@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,8 +54,14 @@ public class ChouActivity extends ActionBarActivity {
         verify = (Button) findViewById(R.id.verify);
         hint = (TextView) findViewById(R.id.hint);
 
+        initActionBar();
         initChouJiang();
         initView();
+    }
+
+    private void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
     }
 
     private void initChouJiang() {
