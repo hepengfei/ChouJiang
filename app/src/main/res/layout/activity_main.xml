@@ -8,18 +8,9 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:gravity="center"/>
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="60dp"
+        android:textStyle="bold"
+        android:textColor="#ffb02121"
         android:text="Large Text"
         android:id="@+id/showView"
         android:layout_alignParentTop="true"
@@ -31,16 +22,20 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_start"
+        android:textSize="20dp"
+        android:padding="10dp"
         android:id="@+id/button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="150dp"
         android:elegantTextHeight="false" />
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_verify"
+        android:textSize="20dp"
+        android:padding="10dp"
         android:id="@+id/verify"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

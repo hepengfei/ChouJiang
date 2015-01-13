@@ -5,8 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_reset">重置抽奖</string>
 
-    <string name="button_start">开抽</string>
-    <string name="button_stop">停止</string>
+    <string name="button_start">开始抽奖</string>
+    <string name="button_stop">停止抽奖</string>
 
     <string name="button_verify">确认领奖</string>
 

@@ -3,20 +3,20 @@ package io.github.hepengfei.choujiang;
 import java.util.Random;
 
 public class PersonManager {
-    private static String initialPersonList [] = new String[] {
+    public static String initialPersonList [] = new String[] {
         "昌睿",
-        "泉龙",
-        "建利",
+        "周泉龙",
+        "李建利",
         "泰福",
-        "长财",
+        "王长财",
         "红良",
-        "昌逊",
+        "张昌逊",
         "卓臻",
         "昌哲",
-        "承哲",
+        "贺承哲",
         "卓逊",
         "武臻",
-        "武睿",
+        "肖武睿",
         "昌羲",
         "昌臻",
         "彦睿",
