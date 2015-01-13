@@ -53,28 +53,33 @@ public class MainActivity extends ActionBarActivity {
         verify = (Button) findViewById(R.id.verify);
         hint = (TextView) findViewById(R.id.hint);
 
+        initChouJiang();
+        initView();
+    }
+
+    private void initChouJiang() {
         chou = new ChouJiangRandom();
         chou.init(initialPersonList);
+    }
 
+    private void initView() {
+        showPersonView.setText("");
+
+        button.setText(R.string.button_start);
+        button.setOnClickListener(startListener);
+
+        verify.setText("确认领奖");
         verify.setOnClickListener(verifyListener);
         verify.setEnabled(false);
-        showPersonView.setText("");
-        updateHint();
 
-        initForStart();
+        updateHint();
     }
 
     private void updateHint() {
-        String message = "总共" +
-                chou.countTotal() +
-                "人，已抽奖" +
-                chou.countGot() +
-                "人，剩余" +
-                chou.countLeft() +
-                "人。";
+        String message = "总共" + chou.countTotal() + "人，已抽奖" + chou.countGot() +
+                "人，剩余" + chou.countLeft() + "人。";
         hint.setText(message);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,19 +105,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void reset() {
-        showPersonView.setText("");
-        chou = new ChouJiangRandom();
-        chou.init(initialPersonList);
-
-        verify.setEnabled(false);
-        verify.setText("确认领奖");
-        updateHint();
+        initChouJiang();
+        initView();
     }
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message message) {
-
             if (message.what == 1) {
                 if (isStop()) {
                     return;
@@ -133,7 +132,11 @@ public class MainActivity extends ActionBarActivity {
     private View.OnClickListener startListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            initForStop();
+            button.setText(R.string.button_stop);
+            button.setOnClickListener(stopListener);
+
+            verify.setEnabled(false);
+            verify.setText("确认领奖");
 
             handler.sendEmptyMessage(1);
         }
@@ -143,10 +146,13 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             showPersonView.setText(chou.chosen());
+
             verify.setText("确认" + chou.chosen() + "领奖");
             verify.setOnClickListener(verifyListener);
+            verify.setEnabled(true);
 
-            initForStart();
+            button.setText(R.string.button_start);
+            button.setOnClickListener(startListener);
         }
     };
 
@@ -160,7 +166,6 @@ public class MainActivity extends ActionBarActivity {
             }
             verify.setText("取消" + personName + "领奖");
 
-            showMessage("恭喜 " + personName + " 中奖！");
             updateHint();
 
             verify.setOnClickListener(verifyListenerGiveUp);
@@ -173,29 +178,10 @@ public class MainActivity extends ActionBarActivity {
             chou.giveUp();
             String personName = chou.chosen();
             verify.setText("确认" + personName + "领奖");
-            showMessage("已取消 " + personName + " 领奖！");
             updateHint();
 
             verify.setOnClickListener(verifyListener);
         }
     };
 
-    private void showMessage(String s) {
-        //Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-    }
-
-    private void initForStart() {
-        button.setText(R.string.button_start);
-        button.setOnClickListener(startListener);
-
-        verify.setEnabled(true);
-    }
-
-    private void initForStop() {
-        button.setText(R.string.button_stop);
-        button.setOnClickListener(stopListener);
-
-        verify.setEnabled(false);
-        verify.setText("确认领奖");
-    }
 }
