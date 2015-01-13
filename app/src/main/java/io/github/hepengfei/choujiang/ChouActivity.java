@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class ChouActivity extends ActionBarActivity {
 
     private static final long DELAY_MILLIS = 30;
-    private static String initialPersonList [] = new String[] {
+    public static String initialPersonList [] = new String[] {
             "昌睿",
             "周泉龙",
             "李建利",
