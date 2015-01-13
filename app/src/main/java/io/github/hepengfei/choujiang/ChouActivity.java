@@ -1,5 +1,6 @@
 package io.github.hepengfei.choujiang;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -93,6 +94,11 @@ public class ChouActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        if (id == R.id.action_pool_manager) {
+            Intent intent = new Intent(this, PoolManagerActivity.class);
+            startActivity(intent);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
