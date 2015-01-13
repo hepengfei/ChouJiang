@@ -1,9 +1,8 @@
 package io.github.hepengfei.choujiang;
 
-import android.app.ListActivity;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -25,12 +24,11 @@ public class PoolManagerActivity extends ActionBarActivity {
         initActionBar();
 
         listView = (ListView)findViewById(R.id.listView);
-        listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, getData()));
-
+        listView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, getData()));
     }
 
     private List<String> getData() {
-        List<String> data = new ArrayList<String>();
+        List<String> data = new ArrayList<>();
         for(int i=0; i<ChouActivity.initialPersonList.length; ++i) {
             data.add(ChouActivity.initialPersonList[i]);
         }
