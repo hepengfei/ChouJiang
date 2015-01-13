@@ -7,6 +7,6 @@
     <string name="button_stop">开奖</string>
     <string name="button_verify">确认领奖</string>
     <string name="title_activity_pool_manager">奖池</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_import">导入</string>
 
 </resources>
