@@ -68,9 +68,7 @@ public class MainActivity extends ActionBarActivity {
         button.setText(R.string.button_start);
         button.setOnClickListener(startListener);
 
-        verify.setText("确认领奖");
-        verify.setOnClickListener(verifyListener);
-        verify.setEnabled(false);
+        verify.setVisibility(View.INVISIBLE);
 
         updateHint();
     }
@@ -135,8 +133,7 @@ public class MainActivity extends ActionBarActivity {
             button.setText(R.string.button_stop);
             button.setOnClickListener(stopListener);
 
-            verify.setEnabled(false);
-            verify.setText("确认领奖");
+            verify.setVisibility(View.INVISIBLE);
 
             handler.sendEmptyMessage(1);
         }
@@ -145,11 +142,15 @@ public class MainActivity extends ActionBarActivity {
     private View.OnClickListener stopListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            showPersonView.setText(chou.chosen());
+            final String chosen = chou.chosen();
+            chou.gotIt();
+            updateHint();
 
-            verify.setText("确认" + chou.chosen() + "领奖");
-            verify.setOnClickListener(verifyListener);
-            verify.setEnabled(true);
+            showPersonView.setText(chosen);
+
+            verify.setText("取消此次抽奖结果");
+            verify.setOnClickListener(verifyListenerGiveUp);
+            verify.setVisibility(View.VISIBLE);
 
             button.setText(R.string.button_start);
             button.setOnClickListener(startListener);
@@ -160,14 +161,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             chou.gotIt();
-            String personName = chou.chosen();
-            if (personName.isEmpty()) {
-                return;
-            }
-            verify.setText("取消" + personName + "领奖");
-
             updateHint();
 
+            verify.setText("取消此次抽奖结果");
             verify.setOnClickListener(verifyListenerGiveUp);
         }
     };
@@ -176,10 +172,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             chou.giveUp();
-            String personName = chou.chosen();
-            verify.setText("确认" + personName + "领奖");
             updateHint();
 
+            verify.setText("恢复此次抽奖结果");
             verify.setOnClickListener(verifyListener);
         }
     };
