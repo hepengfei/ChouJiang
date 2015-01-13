@@ -4,10 +4,10 @@
     <string name="app_name">抽奖</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_reset">重置抽奖</string>
-
     <string name="button_start">幸运大奖花落谁家？</string>
     <string name="button_stop">开奖</string>
-
     <string name="button_verify">确认领奖</string>
+    <string name="title_activity_pool_manager">PoolManagerActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
