@@ -53,7 +53,13 @@ public class ChouActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        initView(); // 停止当前的抽奖进程
+        if (! isStop()) {
+            stop();
+        }
+    }
+
+    private void stop() {
+        initView();
     }
 
     private void initActionBar() {
