@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="unused1">#660099cc</color>
+    <color name="background_person_list_default">#00FFFFFF</color>
+    <color name="background_person_list_checked">#ff0c8ef1</color>
+    <color name="background_person_list_focused">#99c1f81f</color>
+</resources>

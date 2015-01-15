@@ -1,26 +1,26 @@
 package io.github.hepengfei.choujiang;
 
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 
 public class PoolManagerActivity extends ActionBarActivity {
@@ -29,7 +29,7 @@ public class PoolManagerActivity extends ActionBarActivity {
     private EditText editText;
     private ImageButton addButton;
     private List<String> personList;
-    private ArrayAdapter adapter;
+    private BaseAdapter adapter;
     private TextView textView;
 
     @Override
@@ -41,7 +41,9 @@ public class PoolManagerActivity extends ActionBarActivity {
         for (int i=0; i<ChouActivity.initialPersonList.length; ++i) {
             personList.add(ChouActivity.initialPersonList[i]);
         }
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, personList);
+        //adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, personList);
+        //adapter = new ArrayAdapter<>(this, R.layout.person_item, personList);
+        adapter = new PersonListAdapter();
 
         initActionBar();
 
@@ -91,6 +93,14 @@ public class PoolManagerActivity extends ActionBarActivity {
         });
 
         listView.setAdapter(adapter);
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.v("onItemLongClick", "position=" + position + ",id=" + id + ",countOfChecked=" + listView.getCheckedItemCount());
+                return true;
+            }
+        });
 
         updateView();
     }
@@ -145,5 +155,84 @@ public class PoolManagerActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class PersonItemHolder {
+        TextView textView;
+        ImageButton imageButton;
+    }
+
+    class PersonListAdapter extends BaseAdapter {
+
+        private ImageButton lastToggledButton;
+
+        @Override
+        public int getCount() {
+            return personList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return personList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            PersonItemHolder holder;
+
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.person_item, null);
+                holder = new PersonItemHolder();
+                holder.textView = (TextView) convertView.findViewById(R.id.textView);
+                holder.imageButton = (ImageButton) convertView.findViewById(R.id.imageButton);
+                holder.imageButton.setTag(holder);
+                convertView.setTag(holder);
+            } else {
+                holder = (PersonItemHolder)convertView.getTag();
+            }
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PersonItemHolder holder = (PersonItemHolder)v.getTag();
+                    if (lastToggledButton != null && lastToggledButton != holder.imageButton) {
+                        lastToggledButton.setVisibility(View.INVISIBLE);
+                    }
+
+                    if (holder.imageButton.getVisibility() == View.VISIBLE) {
+                        holder.imageButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.imageButton.setVisibility(View.VISIBLE);
+                    }
+
+                    lastToggledButton = holder.imageButton;
+                }
+            });
+            holder.textView.setText(personList.get(position));
+
+            holder.imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PersonItemHolder holder = (PersonItemHolder)v.getTag();
+                    removePerson(holder.textView.getText().toString());
+
+                    lastToggledButton = null; // lastToggledButton == holder.imageButton == v
+                }
+            });
+
+            holder.imageButton.setVisibility(View.INVISIBLE);
+
+            return convertView;
+        }
+    }
+
+    private void removePerson(String person) {
+        personList.remove(person);
+        updateView();
     }
 }

@@ -49,6 +49,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/listView"
         android:layout_below="@+id/textView"
+        android:choiceMode="multipleChoice"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

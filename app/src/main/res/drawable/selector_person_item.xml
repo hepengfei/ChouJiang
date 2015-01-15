@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="false" android:drawable="@color/background_person_list_default"></item>
+    <item android:state_focused="true" android:drawable="@color/background_person_list_focused"></item>
+    <item android:state_selected="true" android:drawable="@color/background_person_list_checked"></item>
+</selector>
