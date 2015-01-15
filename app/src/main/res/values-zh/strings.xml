@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">抽奖</string>
+    <string name="action_pool_manager">名单</string>
+    <string name="button_start">幸运大奖花落谁家？</string>
+    <string name="button_stop">开奖</string>
+    <string name="button_verify">确认领奖</string>
+    <string name="title_activity_pool_manager">名单</string>
+    <string name="action_clear">清空</string>
+    <string name="action_copy">复制</string>
+
+</resources>
