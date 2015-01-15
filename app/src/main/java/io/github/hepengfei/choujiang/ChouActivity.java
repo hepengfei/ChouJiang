@@ -17,23 +17,7 @@ public class ChouActivity extends ActionBarActivity {
 
     private static final long DELAY_MILLIS = 30;
     public static String initialPersonList [] = new String[] {
-            "昌睿",
-            "周泉龙",
-            "李建利",
-            "泰福",
-            "王长财",
-            "红良",
-            "张昌逊",
-            "卓臻",
-            "昌哲",
-            "贺承哲",
-            "卓逊",
-            "武臻",
-            "肖武睿",
-            "昌羲",
-            "昌臻",
-            "彦睿",
-            "思源"
+            "王五", "赵六"
     };
 
     private ChouJiangInterface chou;
@@ -55,6 +39,13 @@ public class ChouActivity extends ActionBarActivity {
         hint = (TextView) findViewById(R.id.hint);
 
         initActionBar();
+        initChouJiang();
+        initView();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         initChouJiang();
         initView();
     }
@@ -81,7 +72,7 @@ public class ChouActivity extends ActionBarActivity {
     }
 
     private void updateHint() {
-        String message = "总共" + chou.countTotal() + "人，已开奖" + chou.countGot() +
+        String message = "总计" + chou.countTotal() + "人，已开奖" + chou.countGot() +
                 "次，本轮剩余" + chou.countLeft() + "人";
         hint.setText(message);
     }
