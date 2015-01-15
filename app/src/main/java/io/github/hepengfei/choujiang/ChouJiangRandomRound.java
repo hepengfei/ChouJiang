@@ -57,6 +57,9 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
         }
 
         if (count == 0) {
+            if (list.length == 0) {
+                return;
+            }
             count = list.length;
             numberOfRound++;
         }
@@ -69,6 +72,9 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
 
     @Override
     public String chosenForDisplay() {
+        if (list.length == 0) {
+            return "";
+        }
         return list[Math.abs(random.nextInt()) % list.length];
     }
 
