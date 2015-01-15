@@ -30,6 +30,9 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <meta-data android:value="54b79a2afd98c509900004c2" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="default" android:name="UMENG_CHANNEL"/>
+
         <service
             android:name="com.umeng.update.net.DownloadingService"
             android:process=":DownloadingService" >
@@ -39,8 +42,5 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
     </application>
-
-    <meta-data android:value="54b79a2afd98c509900004c2" android:name="UMENG_APPKEY"></meta-data>
-    <meta-data android:value="default" android:name="UMENG_CHANNEL"/>
 
 </manifest>
