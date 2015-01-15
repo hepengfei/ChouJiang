@@ -12,6 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class ChouActivity extends ActionBarActivity {
 
@@ -30,6 +36,8 @@ public class ChouActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chou);
 
+        UmengUpdateAgent.update(this);
+
         chou = ChouJiangRandomRound.getInstance();
 
         showPersonView = (TextView) findViewById(R.id.showView);
@@ -44,12 +52,15 @@ public class ChouActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
         initView();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        MobclickAgent.onPause(this);
+
         if (! isStop()) {
             stop();
         }
@@ -135,6 +146,13 @@ public class ChouActivity extends ActionBarActivity {
             verify.setVisibility(View.INVISIBLE);
 
             handler.sendEmptyMessage(1);
+
+
+            Map<String, String > status = new HashMap<>();
+            status.put("total", String.valueOf(chou.countTotal()));
+            status.put("got", String.valueOf(chou.countGot()));
+            status.put("left", String.valueOf(chou.countLeft()));
+            MobclickAgent.onEvent(ChouActivity.this, "chou_start", status);
         }
     };
 
@@ -153,6 +171,13 @@ public class ChouActivity extends ActionBarActivity {
 
             button.setText(R.string.button_start);
             button.setOnClickListener(startListener);
+
+
+            Map<String, String > status = new HashMap<>();
+            status.put("total", String.valueOf(chou.countTotal()));
+            status.put("got", String.valueOf(chou.countGot()));
+            status.put("left", String.valueOf(chou.countLeft()));
+            MobclickAgent.onEvent(ChouActivity.this, "chou_stop");
         }
     };
 

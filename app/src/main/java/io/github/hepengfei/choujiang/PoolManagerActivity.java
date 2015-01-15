@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -161,8 +163,15 @@ public class PoolManagerActivity extends ActionBarActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     class PersonItemHolder {
@@ -247,4 +256,5 @@ public class PoolManagerActivity extends ActionBarActivity {
         chou.remove(person);
         updateView();
     }
+
 }
