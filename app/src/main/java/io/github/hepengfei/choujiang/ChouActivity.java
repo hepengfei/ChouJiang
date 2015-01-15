@@ -50,6 +50,12 @@ public class ChouActivity extends ActionBarActivity {
         initView();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        initView(); // 停止当前的抽奖进程
+    }
+
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
