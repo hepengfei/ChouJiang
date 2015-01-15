@@ -1,5 +1,7 @@
 package io.github.hepengfei.choujiang;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -151,6 +153,21 @@ public class PoolManagerActivity extends ActionBarActivity {
             }
             ChouActivity.initialPersonList = tmp;
             this.finish();
+            return true;
+        }
+
+        if (id == R.id.action_copy) {
+            Iterator<String> it = personList.iterator();
+            String result = "";
+            while (it.hasNext()) {
+                result = result + it.next() + (it.hasNext() ? "，" : "");
+            }
+
+            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            ClipData clipData = ClipData.newPlainText("名单", result);
+            clipboardManager.setPrimaryClip(clipData);
+
+            Toast.makeText(PoolManagerActivity.this, "已复制" + personList.size() + "人的名单到剪贴板", Toast.LENGTH_LONG).show();
             return true;
         }
 

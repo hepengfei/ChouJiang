@@ -2,6 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="io.github.hepengfei.choujiang.PoolManagerActivity">
-    <item android:id="@+id/action_clear" android:title="@string/action_clear"
+    <item android:id="@+id/action_copy" android:title="@string/action_copy"
+        android:icon="@drawable/ic_action_copy"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_clear" android:title="@string/action_clear"
+        android:icon="@drawable/ic_action_remove"
+        android:orderInCategory="101" app:showAsAction="never" />
 </menu>
