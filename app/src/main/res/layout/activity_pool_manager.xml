@@ -28,7 +28,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
         android:id="@+id/addButton"
-        android:src="@drawable/ic_action_new"
+        android:src="@drawable/ic_action_add_person"
         android:layout_alignParentRight="true"/>
 
 
