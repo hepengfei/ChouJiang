@@ -44,8 +44,8 @@ public class ChouActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         initChouJiang();
         initView();
     }

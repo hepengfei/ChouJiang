@@ -144,14 +144,6 @@ public class PoolManagerActivity extends ActionBarActivity {
         }
 
         if (id == android.R.id.home) {
-            String tmp[] = new String[personList.size()];
-            Iterator<String> it = personList.iterator();
-            int i = 0;
-            while (it.hasNext()) {
-                tmp[i] = it.next();
-                i++;
-            }
-            ChouActivity.initialPersonList = tmp;
             this.finish();
             return true;
         }
@@ -172,6 +164,20 @@ public class PoolManagerActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        String tmp[] = new String[personList.size()];
+        Iterator<String> it = personList.iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            tmp[i] = it.next();
+            i++;
+        }
+        ChouActivity.initialPersonList = tmp;
     }
 
     class PersonItemHolder {
