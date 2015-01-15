@@ -4,7 +4,7 @@ package io.github.hepengfei.choujiang;
 public interface ChouJiangInterface {
 
     // 初始化内容
-    public void init(String list[]);
+    public void init();
 
     // 待抽奖的总数
     public int countTotal();
@@ -30,4 +30,10 @@ public interface ChouJiangInterface {
     // 放弃本次领奖
     public void giveUp();
 
+
+    public int add(String name);
+    public int remove(String name);
+    public void clear();
+    public void reset();
+    public String getName(int position);
 }

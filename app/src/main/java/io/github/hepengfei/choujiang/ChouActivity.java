@@ -16,9 +16,6 @@ import android.widget.TextView;
 public class ChouActivity extends ActionBarActivity {
 
     private static final long DELAY_MILLIS = 30;
-    public static String initialPersonList [] = new String[] {
-            "王五", "赵六"
-    };
 
     private ChouJiangInterface chou;
 
@@ -33,20 +30,20 @@ public class ChouActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chou);
 
+        chou = ChouJiangRandomRound.getInstance();
+
         showPersonView = (TextView) findViewById(R.id.showView);
         button = (Button) findViewById(R.id.button);
         verify = (Button) findViewById(R.id.verify);
         hint = (TextView) findViewById(R.id.hint);
 
         initActionBar();
-        initChouJiang();
         initView();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initChouJiang();
         initView();
     }
 
@@ -67,10 +64,6 @@ public class ChouActivity extends ActionBarActivity {
         actionBar.setDisplayShowHomeEnabled(true);
     }
 
-    private void initChouJiang() {
-        chou = new ChouJiangRandomRound();
-        chou.init(initialPersonList);
-    }
 
     private void initView() {
         showPersonView.setText("");

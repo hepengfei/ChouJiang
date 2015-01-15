@@ -1,22 +1,35 @@
 package io.github.hepengfei.choujiang;
 
+import android.content.SharedPreferences;
+
 import java.util.Random;
 
-/**
- * Created by hpf on 15/1/12.
- */
 public class ChouJiangRandomRound implements ChouJiangInterface {
     private String list[];
     private int count;
     private Random random;
 
     private int currentChoosen;
-    private boolean gotIt;
-    private int numberOfRound;
+    private int currentChoosenGot;
+    private int numberOfGot;
+
+    private static ChouJiangInterface sInstance;
+    public static ChouJiangInterface getInstance() {
+        if (sInstance == null) {
+            synchronized (ChouJiangRandomRound.class) {
+                if (sInstance == null) {
+                    sInstance = new ChouJiangRandomRound();
+                    sInstance.init();
+                }
+            }
+        }
+        return sInstance;
+    }
 
     @Override
-    public void init(String[] list) {
-        this.list = new String[list.length];
+    public void init() {
+        restore();
+        /*this.list = new String[list.length];
         System.arraycopy(list, 0, this.list, 0, list.length);
         count = list.length;
 
@@ -25,7 +38,7 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
 
         currentChoosen = -1;
         gotIt = false;
-        numberOfRound = 0;
+        numberOfRound = 0;*/
     }
 
     @Override
@@ -35,39 +48,30 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
 
     @Override
     public int countLeft() {
-        return count - ((gotIt && currentChoosen != -1) ? 1 : 0);
+        return count;
     }
 
     @Override
     public int countGot() {
-        return ((numberOfRound + 1) * countTotal()) - countLeft();
+        return numberOfGot;
     }
 
     @Override
     public void next() {
-        if (gotIt && currentChoosen != -1) {
-            count = count - 1;
-
-            String tmp = list[currentChoosen];
-            list[currentChoosen] = list[count];
-            list[count] = tmp;
-
-            gotIt = false;
-            currentChoosen = -1;
+        if (list.length == 0) {
+            return;
         }
 
+        // 自动循环抽
         if (count == 0) {
-            if (list.length == 0) {
-                return;
-            }
             count = list.length;
-            numberOfRound++;
         }
 
         randomize(random, list, 0, count);
 
         random.setSeed(System.currentTimeMillis());
         currentChoosen = Math.abs(random.nextInt()) % count;
+        currentChoosenGot = -1;
     }
 
     @Override
@@ -80,20 +84,165 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
 
     @Override
     public String chosen() {
-        if (currentChoosen == -1) {
-            return null;
+        if (currentChoosen != -1) {
+            return list[currentChoosen];
         }
-        return list[currentChoosen];
+        if (currentChoosenGot != -1) {
+            return list[currentChoosenGot];
+        }
+        return null;
     }
 
     @Override
     public void gotIt() {
-        gotIt = true;
+        if (currentChoosen == -1 || count == 0) {
+            return;
+        }
+
+        count = count - 1;
+
+        String tmp = list[currentChoosen];
+        list[currentChoosen] = list[count];
+        list[count] = tmp;
+
+        currentChoosenGot = currentChoosen;
+        currentChoosen = -1;
+
+        numberOfGot ++;
+
+        save();
     }
 
     @Override
     public void giveUp() {
-        gotIt = false;
+        if (currentChoosenGot == -1) {
+            return;
+        }
+
+        String tmp = list[currentChoosenGot];
+        list[currentChoosenGot] = list[count];
+        list[count] = tmp;
+
+        count = count + 1;
+
+        currentChoosen = currentChoosenGot;
+        currentChoosenGot = -1;
+
+        numberOfGot --;
+
+        save();
+    }
+
+    @Override
+    public int add(String name) {
+        for (int i = 0; i<list.length; ++i) {
+            if (list[i] == name) {
+                return 0;
+            }
+        }
+
+        String newList[] = new String[list.length + 1];
+        System.arraycopy(list, 0, newList, 1, list.length);;
+        newList[0] = name;
+
+        list = newList;
+        count ++;
+        if (currentChoosen != -1) {
+            currentChoosen ++;
+        }
+        if (currentChoosenGot != -1) {
+            currentChoosenGot ++;
+        }
+
+        save();
+
+        return 1;
+    }
+
+    @Override
+    public int remove(String name) {
+        int found = -1;
+
+        for (int i = 0; i<list.length; ++i) {
+            if (list[i] == name) {
+                found = i;
+            }
+        }
+        if (found == -1) {
+            return 0;
+        }
+
+        list[found] = list[list.length - 1];
+
+        String newList[] = new String[list.length - 1];
+        System.arraycopy(list, 0, newList, 0, list.length - 1);
+        list = newList;
+
+        if (found < count) {
+            count --;
+            if (currentChoosen != -1) {
+                currentChoosen --;
+            }
+            if (currentChoosenGot != -1) {
+                currentChoosenGot --;
+            }
+        }
+
+        save();
+
+        return 1;
+    }
+
+    @Override
+    public String getName(int position) {
+        return list[position];
+    }
+
+    @Override
+    public void clear() {
+        list = new String[0];
+        reset();
+    }
+
+    @Override
+    public void reset() {
+        count = 0;
+        currentChoosen = -1;
+        currentChoosenGot = -1;
+        numberOfGot = 0;
+        save();
+    }
+
+    private void save() {
+        String data = "";
+        for (int i=0; i<list.length; ++i) {
+            data = data + list[i] + (((i + 1) < list.length) ? "," : "");
+        }
+
+        SharedPreferences sharedPreferences = ApplicationChou.getInstance().getSharedPreferences("chou");
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("list", data);
+        editor.putInt("count", count);
+        editor.putInt("currentChoosen", currentChoosen);
+        editor.putInt("currentChoosenGot", currentChoosenGot);
+        editor.putInt("numberOfGot", numberOfGot);
+        editor.commit();
+    }
+
+    private void restore() {
+        SharedPreferences sharedPreferences = ApplicationChou.getInstance().getSharedPreferences("chou");
+        String data = sharedPreferences.getString("list", "").trim();
+        if (data.isEmpty()) {
+            list = new String[0];
+        } else {
+            list = data.split("[,]");
+        }
+        count = sharedPreferences.getInt("count", 0);
+        currentChoosen = sharedPreferences.getInt("currentChoosen", -1);
+        currentChoosenGot = sharedPreferences.getInt("currentChoosenGot", -1);
+        numberOfGot = sharedPreferences.getInt("numberOfGot", 0);
+        random = new Random();
+        random.setSeed(System.currentTimeMillis());
     }
 
     private static void randomize(Random random, String stringArray[], int begin, int count) {

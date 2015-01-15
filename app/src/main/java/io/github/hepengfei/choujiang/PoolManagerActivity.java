@@ -2,7 +2,6 @@ package io.github.hepengfei.choujiang;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -12,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -30,21 +27,18 @@ public class PoolManagerActivity extends ActionBarActivity {
     private ListView listView;
     private EditText editText;
     private ImageButton addButton;
-    private List<String> personList;
     private BaseAdapter adapter;
     private TextView textView;
+
+    private ChouJiangInterface chou;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pool_manager);
 
-        personList = new LinkedList<>();
-        for (int i=0; i<ChouActivity.initialPersonList.length; ++i) {
-            personList.add(ChouActivity.initialPersonList[i]);
-        }
-        //adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, personList);
-        //adapter = new ArrayAdapter<>(this, R.layout.person_item, personList);
+        chou = ChouJiangRandomRound.getInstance();
+
         adapter = new PersonListAdapter();
 
         initActionBar();
@@ -71,12 +65,12 @@ public class PoolManagerActivity extends ActionBarActivity {
                     if (person.isEmpty()) {
                         continue;
                     }
-                    if (personList.contains(person)) {
+                    final int n = chou.add(person);
+                    if (n == 0) {
                         numberOfIgnored ++;
-                        continue;
+                    } else {
+                        numberOfAdded ++;
                     }
-                    personList.add(0, person);
-                    numberOfAdded ++;
                 }
                 String message = "";
                 if (numberOfIgnored > 0) {
@@ -109,10 +103,10 @@ public class PoolManagerActivity extends ActionBarActivity {
 
     private void updateView() {
         adapter.notifyDataSetChanged();
-        if (personList.isEmpty()) {
+        if (chou.countTotal() == 0) {
             textView.setText("当前名单为空，请添加抽奖人员");
         } else {
-            textView.setText("当前名单总计" + personList.size() + "人：");
+            textView.setText("当前名单总计" + chou.countTotal() + "人：");
         }
     }
 
@@ -138,7 +132,7 @@ public class PoolManagerActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_clear) {
-            personList.clear();
+            chou.clear();
             updateView();
             return true;
         }
@@ -149,17 +143,17 @@ public class PoolManagerActivity extends ActionBarActivity {
         }
 
         if (id == R.id.action_copy) {
-            Iterator<String> it = personList.iterator();
             String result = "";
-            while (it.hasNext()) {
-                result = result + it.next() + (it.hasNext() ? "，" : "");
+            for (int i = 0; i < chou.countTotal(); ++i) {
+                result = result + chou.getName(i) +
+                        (((i+1)<chou.countTotal())? "，" : "");
             }
 
             ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             ClipData clipData = ClipData.newPlainText("名单", result);
             clipboardManager.setPrimaryClip(clipData);
 
-            Toast.makeText(PoolManagerActivity.this, "已复制" + personList.size() + "人的名单到剪贴板", Toast.LENGTH_LONG).show();
+            Toast.makeText(PoolManagerActivity.this, "已复制" + chou.countTotal() + "人的名单到剪贴板", Toast.LENGTH_LONG).show();
             return true;
         }
 
@@ -169,15 +163,6 @@ public class PoolManagerActivity extends ActionBarActivity {
     @Override
     public void onPause() {
         super.onPause();
-
-        String tmp[] = new String[personList.size()];
-        Iterator<String> it = personList.iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            tmp[i] = it.next();
-            i++;
-        }
-        ChouActivity.initialPersonList = tmp;
     }
 
     class PersonItemHolder {
@@ -189,14 +174,18 @@ public class PoolManagerActivity extends ActionBarActivity {
 
         private ImageButton lastToggledButton;
 
+        public PersonListAdapter() {
+
+        }
+
         @Override
         public int getCount() {
-            return personList.size();
+            return chou.countTotal();
         }
 
         @Override
         public Object getItem(int position) {
-            return personList.get(position);
+            return chou.getName(position);
         }
 
         @Override
@@ -236,7 +225,7 @@ public class PoolManagerActivity extends ActionBarActivity {
                     lastToggledButton = holder.imageButton;
                 }
             });
-            holder.textView.setText(personList.get(position));
+            holder.textView.setText(chou.getName(position));
 
             holder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -255,7 +244,7 @@ public class PoolManagerActivity extends ActionBarActivity {
     }
 
     private void removePerson(String person) {
-        personList.remove(person);
+        chou.remove(person);
         updateView();
     }
 }
