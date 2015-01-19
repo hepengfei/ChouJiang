@@ -126,7 +126,7 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
     @Override
     public int add(String name) {
         for (int i = 0; i<list.length; ++i) {
-            if (list[i] == name) {
+            if (list[i].equals(name)) {
                 return 0;
             }
         }
@@ -154,7 +154,7 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
         int found = -1;
 
         for (int i = 0; i<list.length; ++i) {
-            if (list[i] == name) {
+            if (list[i].equals(name)) {
                 found = i;
             }
         }
