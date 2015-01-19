@@ -78,7 +78,7 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
             return list[currentChoosen];
         }
         if (currentChoosenGot != -1) {
-            return list[currentChoosenGot];
+            return list[count];
         }
         return null;
     }
@@ -109,9 +109,9 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
             return;
         }
 
-        String tmp = list[currentChoosenGot];
-        list[currentChoosenGot] = list[count];
-        list[count] = tmp;
+        String tmp = list[count];
+        list[count] = list[currentChoosenGot];
+        list[currentChoosenGot] = tmp;
 
         count = count + 1;
 
