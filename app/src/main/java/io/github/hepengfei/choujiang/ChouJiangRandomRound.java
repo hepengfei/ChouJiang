@@ -29,16 +29,6 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
     @Override
     public void init() {
         restore();
-        /*this.list = new String[list.length];
-        System.arraycopy(list, 0, this.list, 0, list.length);
-        count = list.length;
-
-        random = new Random();
-        random.setSeed(System.currentTimeMillis());
-
-        currentChoosen = -1;
-        gotIt = false;
-        numberOfRound = 0;*/
     }
 
     @Override
@@ -199,6 +189,16 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
     }
 
     @Override
+    public String getAllNames() {
+        String result = "";
+        for (int i = 0; i < countTotal(); ++i) {
+            result = result + getName(i) +
+                    (((i+1) < countTotal())? "，" : "");
+        }
+        return result;
+    }
+
+    @Override
     public void clear() {
         list = new String[0];
         reset();
@@ -214,14 +214,9 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
     }
 
     private void save() {
-        String data = "";
-        for (int i=0; i<list.length; ++i) {
-            data = data + list[i] + (((i + 1) < list.length) ? "," : "");
-        }
-
         SharedPreferences sharedPreferences = ApplicationChou.getInstance().getSharedPreferences("chou");
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("list", data);
+        editor.putString("list", getAllNames());
         editor.putInt("count", count);
         editor.putInt("currentChoosen", currentChoosen);
         editor.putInt("currentChoosenGot", currentChoosenGot);
@@ -235,7 +230,7 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
         if (data.isEmpty()) {
             list = new String[0];
         } else {
-            list = data.split("[,]");
+            list = data.split("[,，]");
         }
         count = sharedPreferences.getInt("count", 0);
         currentChoosen = sharedPreferences.getInt("currentChoosen", -1);

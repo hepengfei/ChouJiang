@@ -36,4 +36,5 @@ public interface ChouJiangInterface {
     public void clear();
     public void reset();
     public String getName(int position);
+    public String getAllNames();
 }

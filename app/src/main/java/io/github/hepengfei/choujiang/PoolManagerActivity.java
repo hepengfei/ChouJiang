@@ -145,14 +145,8 @@ public class PoolManagerActivity extends ActionBarActivity {
         }
 
         if (id == R.id.action_copy) {
-            String result = "";
-            for (int i = 0; i < chou.countTotal(); ++i) {
-                result = result + chou.getName(i) +
-                        (((i+1)<chou.countTotal())? "，" : "");
-            }
-
             ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            ClipData clipData = ClipData.newPlainText("名单", result);
+            ClipData clipData = ClipData.newPlainText("名单", chou.getAllNames());
             clipboardManager.setPrimaryClip(clipData);
 
             Toast.makeText(PoolManagerActivity.this, "已复制" + chou.countTotal() + "人的名单到剪贴板", Toast.LENGTH_LONG).show();
