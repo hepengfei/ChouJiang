@@ -30,6 +30,9 @@ public interface ChouJiangInterface {
     // 放弃本次领奖
     public void giveUp();
 
+    public boolean isChosenGot();
+    public boolean isChosenGiveUp();
+
 
     public int add(String name);
     public int remove(String name);

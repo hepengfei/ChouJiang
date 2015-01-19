@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
@@ -77,12 +78,23 @@ public class ChouActivity extends ActionBarActivity {
 
 
     private void initView() {
-        showPersonView.setText("");
+        showPersonView.setText(chou.chosen());
 
         button.setText(R.string.button_start);
         button.setOnClickListener(startListener);
 
-        verify.setVisibility(View.INVISIBLE);
+        if (chou.chosen().isEmpty()) {
+            verify.setVisibility(View.INVISIBLE);
+        } else {
+            verify.setVisibility(View.VISIBLE);
+            if (chou.isChosenGot()) {
+                verify.setText(R.string.button_giveup);
+                verify.setOnClickListener(verifyListenerGiveUp);
+            } else {
+                verify.setText(R.string.button_got);
+                verify.setOnClickListener(verifyListenerGot);
+            }
+        }
 
         updateHint();
     }
@@ -140,6 +152,11 @@ public class ChouActivity extends ActionBarActivity {
     private View.OnClickListener startListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (chou.countTotal() == 0) {
+                Toast.makeText(ChouActivity.this, "名单为空，请点击右上角按扭添加。", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             button.setText(R.string.button_stop);
             button.setOnClickListener(stopListener);
 
@@ -165,7 +182,7 @@ public class ChouActivity extends ActionBarActivity {
 
             showPersonView.setText(chosen);
 
-            verify.setText("取消此次抽奖结果");
+            verify.setText(R.string.button_giveup);
             verify.setOnClickListener(verifyListenerGiveUp);
             verify.setVisibility(View.VISIBLE);
 
@@ -181,13 +198,13 @@ public class ChouActivity extends ActionBarActivity {
         }
     };
 
-    private View.OnClickListener verifyListener = new View.OnClickListener() {
+    private View.OnClickListener verifyListenerGot = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             chou.gotIt();
             updateHint();
 
-            verify.setText("取消此次抽奖结果");
+            verify.setText(R.string.button_giveup);
             verify.setOnClickListener(verifyListenerGiveUp);
         }
     };
@@ -198,8 +215,8 @@ public class ChouActivity extends ActionBarActivity {
             chou.giveUp();
             updateHint();
 
-            verify.setText("恢复此次抽奖结果");
-            verify.setOnClickListener(verifyListener);
+            verify.setText(R.string.button_got);
+            verify.setOnClickListener(verifyListenerGot);
         }
     };
 

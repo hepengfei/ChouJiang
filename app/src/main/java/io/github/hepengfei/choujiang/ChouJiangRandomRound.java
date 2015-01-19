@@ -80,7 +80,7 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
         if (currentChoosenGot != -1) {
             return list[count];
         }
-        return null;
+        return "";
     }
 
     @Override
@@ -124,15 +124,25 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
     }
 
     @Override
+    public boolean isChosenGot() {
+        return currentChoosenGot != -1 && currentChoosen == -1;
+    }
+
+    @Override
+    public boolean isChosenGiveUp() {
+        return currentChoosen != -1 && currentChoosenGot == -1;
+    }
+
+    @Override
     public int add(String name) {
-        for (int i = 0; i<list.length; ++i) {
-            if (list[i].equals(name)) {
+        for (String aList : list) {
+            if (aList.equals(name)) {
                 return 0;
             }
         }
 
         String newList[] = new String[list.length + 1];
-        System.arraycopy(list, 0, newList, 1, list.length);;
+        System.arraycopy(list, 0, newList, 1, list.length);
         newList[0] = name;
 
         list = newList;
@@ -152,31 +162,48 @@ public class ChouJiangRandomRound implements ChouJiangInterface {
     @Override
     public int remove(String name) {
         int found = -1;
-
         for (int i = 0; i<list.length; ++i) {
             if (list[i].equals(name)) {
                 found = i;
+                break;
             }
         }
         if (found == -1) {
             return 0;
         }
 
-        list[found] = list[list.length - 1];
+        if (found < count) {
+            list[found] = list[count - 1];
+
+            count --;
+            if (currentChoosen != -1) {
+                if (currentChoosen == found) {
+                    currentChoosen = -1;
+                } else if (currentChoosen == count) {
+                    currentChoosen = found;
+                }
+            }
+            if (currentChoosenGot != -1) {
+                if (currentChoosenGot == found) {
+                    currentChoosenGot = -1;
+                } else if (currentChoosenGot == count) {
+                    currentChoosenGot = found;
+                }
+            }
+
+            for (int i=count; i<list.length-1; ++i) {
+                list[i] = list[i+1];
+            }
+        } else {
+            for (int i=found; i<list.length - 1; ++i) {
+                list[i] = list[i+1];
+            }
+        }
+
 
         String newList[] = new String[list.length - 1];
         System.arraycopy(list, 0, newList, 0, list.length - 1);
         list = newList;
-
-        if (found < count) {
-            count --;
-            if (currentChoosen != -1) {
-                currentChoosen --;
-            }
-            if (currentChoosenGot != -1) {
-                currentChoosenGot --;
-            }
-        }
 
         save();
 
